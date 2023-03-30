@@ -7,7 +7,7 @@ on:
      - 'ga-ignore-**'
 
 env:
-  MIRROR_URL: "git@github.com:EpitechPromo2027/B-DOP-200-LYN-2-1-chocolatine-philemon.linossier.git"
+  MIRROR_URL: "git@github.com:Philou699/BSQ-biggest-square.git"
   EXECUTABLES: "bin1,bin2"
 
 jobs:
