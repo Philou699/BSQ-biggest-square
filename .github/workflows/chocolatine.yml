@@ -1,4 +1,4 @@
-name: chocolatine
+name : chocolatine
 
 on:
   push:
@@ -8,67 +8,76 @@ on:
     branches-ignore:
      - 'ga-ignore-**'
 
-
 env:
-  MIRROR_URL: "https://github.com/Philou699/BSQ-biggest-square/actions"
-  EXECUTABLES: "bsq"
+  MIRROR_URL: ${{ vars.MIRROR_URL }}
+  EXECUTABLES: ${{ vars.EXECUTABLES }}
 
 jobs:
-  check_repository_cleanliness:
-    - name: Run coding style checker
-    run: |
-      cd ../../coding-style-checker
-      coding-style . .
- 
-  check_program_compilation:
-    name: Checks if the program compiles successfully and the executable files have been created
+  check_coding_style:
     runs-on: ubuntu-latest
-    needs: [check_repository_cleanliness]
-    container: epitechcontent/epitest-docker:latest
+    container: ghcr.io/epitech/coding-style-checker:latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
+      - name: "Checkout repository coding style."
+        run:
+          check.sh $(pwd) $(pwd);
+          if [[-s coding-style-reports.log]]; then
+            exit 1;
+          fi
+          exit 0;
 
-      - run: make
-        timeout-minutes: 2
-
-      - run: make clean
-
-      - name: Verifies that there are files and executables
-        run: |
-          echo "FAIL_TASK=false" >> "$GITHUB_ENV"
-          SEARCH_BINARIES="${{ env.EXECUTABLES }}"
-          IFS=$','
-          for BIN in $SEARCH_BINARIES; do
-              if [ ! -f "${BIN}" ]; then
-                  echo "::error file=${BIN},title=Binary not found::${BIN}"
-                  echo "FAIL_TASK=true" >> "$GITHUB_ENV"
-              fi
-              if [ ! -x "${BIN}" ]; then
-                  echo "::error file=${BIN},title=Binary not executable::${BIN}"
-                  echo "FAIL_TASK=true" >> "$GITHUB_ENV"
-              fi
-          done
       - name: Fail if needed
         if: env.FAIL_TASK == 'true'
         run: exit 1
-  
-  run_tests:
-    name: Run the program tests (using rule make tests_run)
-    runs-on: ubuntu-latest
-    needs: [check_program_compilation]
-    container: epitechcontent/epitest-docker:latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      - name: Starts tests
-        run: make tests_run
-        timeout-minutes: 2
+check_program_compilation:
+  name: Checks if the program compiles correctly and executables files got created
+  runs-on: ubuntu-latest
+  container: 
+    image: epitechcontent/epitest-docker:latest
+  needs: 
+    - check_coding_style
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - run: make
+      timeout-minutes: 2
+    - run: make clean
+      run: |
+        echo "FAIL_TASK=false" >> "$GITHUB_ENV"
+        SEARCH_BINARIES="${{ env.EXECUTABLES }}"
+        IFS=$','
+        for BIN in $SEARCH_BINARIES; do
+            if [ ! -f "${BIN}" ]; then
+                echo "::error file=${BIN},title=Binary not found::${BIN}"
+                echo "FAIL_TASK=true" >> "$GITHUB_ENV"
+            fi
+            if [ ! -x "${BIN}" ]; then
+                echo "::error file=${BIN},title=Binary not executable::${BIN}"
+                echo "FAIL_TASK=true" >> "$GITHUB_ENV"
+            fi
+        done
+    - name: Fail if needed
+      if: env.FAIL_TASK == 'true'
+      run: exit 1
+
+run_tests:
+  name: "Run the criterion program tests."
+  runs-on: ubuntu-latest
+  needs: [check_compilation]
+  container: 
+    image: epitechcontent/epitest-docker:latest
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Starts tests
+      - id: run_tests
+      run: make tests_run
+      timeout-minutes: 2
 
   push_to_mirror:
     name: Pushes the current repository files to a given mirror repository
