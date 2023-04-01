@@ -70,8 +70,8 @@ run_tests:
   container: 
     image: epitechcontent/epitest-docker:latest
   steps:
+    - uses: actions/checkout@v3
     - name: Checkout repository
-      uses: actions/checkout@v3
     - name: Starts tests
       - id: run_tests
       run: make tests_run
