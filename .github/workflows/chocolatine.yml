@@ -9,8 +9,8 @@ on:
      - 'ga-ignore-**'
 
 env:
-  MIRROR_URL: git@github.com:Philou699/BSQ-biggest-square.git
-  EXECUTABLES: bsq
+  MIRROR_URL: "git@github.com:Philou699/BSQ-biggest-square.git"
+  EXECUTABLES: "bsq"
 
 jobs:
   check_coding_style:
