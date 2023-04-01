@@ -9,8 +9,8 @@ on:
      - 'ga-ignore-**'
 
 env:
-  MIRROR_URL: ${{ vars.MIRROR_URL }}
-  EXECUTABLES: ${{ vars.EXECUTABLES }}
+  MIRROR_URL: git@github.com:Philou699/BSQ-biggest-square.git
+  EXECUTABLES: bsq
 
 jobs:
   check_coding_style:
@@ -40,10 +40,8 @@ check_program_compilation:
   steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - run: make
       timeout-minutes: 2
+    - run: make
     - run: make clean
       run: |
         echo "FAIL_TASK=false" >> "$GITHUB_ENV"
@@ -74,8 +72,8 @@ run_tests:
     - name: Checkout repository
     - name: Starts tests
       - id: run_tests
-      run: make tests_run
       timeout-minutes: 2
+      run: make tests_run
 
   push_to_mirror:
     name: Pushes the current repository files to a given mirror repository
@@ -92,6 +90,6 @@ run_tests:
         uses: pixta-dev/repository-mirroring-action@v1
         with:
           target_repo_url:
-            ${{ env.MIRROR_URL }}
+            git@github.com:Philou699/BSQ-biggest-square.git
           ssh_private_key:
             ${{ secrets.GIT_SSH_PRIVATE_KEY }}
