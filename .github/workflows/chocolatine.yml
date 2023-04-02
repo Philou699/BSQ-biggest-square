@@ -80,9 +80,9 @@ run_tests:
           fetch-depth: 0
 
       - name: Push mirror repository
-        uses: pixta-dev/repository-mirroring-action@main
+        uses: pixta-dev/repository-mirroring-action@v1
         with:
           target_repo_url:
-            "https://github.com/Philou699/BSQ-biggest-square"
+            ${{ env.MIRROR_URL }}
           ssh_private_key:
             ${{ secrets.GIT_SSH_PRIVATE_KEY }}
