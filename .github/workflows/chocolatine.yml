@@ -3,10 +3,10 @@ name : chocolatine
 on:
   push:
     branches-ignore:
-     - 'ga-ignore-**'
+     - 'ga-ignore-*'
   pull_request:
     branches-ignore:
-     - 'ga-ignore-**'
+     - 'ga-ignore-*'
 
 env:
   MIRROR_URL: "https://github.com/Philou699/BSQ-biggest-square"
