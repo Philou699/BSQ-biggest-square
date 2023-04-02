@@ -37,13 +37,13 @@ jobs:
     container:
       image: epitechcontent/epitest-docker:latest
     steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - run: make
+        timeout-minutes: 2
         continue-on-error: true
         env:
           EXECUTABLES: ${{ env.EXECUTABLES }}
       - run: |
-          make
           OIFS=$IFS
           IFS=','
           for x in $EXECUTABLES
@@ -51,7 +51,6 @@ jobs:
             ./$x
           done
           IFS=$OIFS
-        timeout-minutes: 2
 
   run_tests:
     needs: [check_program_compilation]
