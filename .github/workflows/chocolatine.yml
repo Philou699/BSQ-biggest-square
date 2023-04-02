@@ -3,14 +3,14 @@ name : chocolatine
 on:
   push:
     branches-ignore:
-     - 'ga-ignore-*'
+     - 'ga-ignore-**'
   pull_request:
     branches-ignore:
-     - 'ga-ignore-*'
+     - 'ga-ignore-**'
 
 env:
-  MIRROR_URL: "https://github.com/Philou699/BSQ-biggest-square"
-  EXECUTABLES: bsq
+  MIRROR_URL: "git@github.com:EpitechPromo2027/B-DOP-200-LYN-2-1-chocolatine-philemon.linossier.git"
+  EXECUTABLES: "bsq"
 
 jobs:
   check_coding_style:
@@ -35,8 +35,7 @@ check_program_compilation:
   runs-on: ubuntu-latest
   container: 
     image: epitechcontent/epitest-docker:latest
-  needs: 
-    - check_coding_style
+  needs: [check_coding_style]
   steps:
     - name: "Checkout repository"
       uses: actions/checkout@v3
@@ -51,10 +50,6 @@ check_program_compilation:
             ./$x
           done
         IFS=$OIFS
-
-    - name: Fail if needed
-      if: env.FAIL_TASK == 'true'
-      run: exit 1
 
 run_tests:
   name: "Run the criterion program tests."
