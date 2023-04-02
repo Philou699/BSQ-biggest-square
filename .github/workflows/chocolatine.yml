@@ -10,7 +10,7 @@ on:
 
 env:
   MIRROR_URL: "https://github.com/EpitechPromo2027/B-DOP-200-LYN-2-1-chocolatine-philemon.linossier.git"
-  EXECUTABLES: "binary"
+  EXECUTABLES: "bsq"
 
 jobs:
   check_coding_style:
